@@ -44,7 +44,7 @@ class UkkonenSuffixTree:
             leaf_end_value = index
             self.remainder += 1
             self.latest_node = None
-            # self.insert_char_in_suffix_tree(index)
+            self.insert_char_in_suffix_tree(index)
 
     def traverse_tree(self):
         """
@@ -60,6 +60,21 @@ class UkkonenSuffixTree:
         """
         for child in self.tree_traversal(self.root_node):
             print(child)
+
+    def set_act_edge_to_current_index(self, index):
+        if (self.act_len == 0):
+            self.act_edge = index
+
+    def construct_suffix_tree(self):
+        """
+        Responsiblity: Main Method to build Ukkonen
+            Based Suffix Tree
+        Input: formatted_string = input_string + "$"
+        Ouput: Newly Contructed Suffix Tree Based on
+            Ukkonen Algorithm
+        """
+        self.initializing_the_value_and_add_root_node()
+        self.iterate_char_by_char()
 
     def tree_traversal(self, current_node):
         """
@@ -84,17 +99,9 @@ class UkkonenSuffixTree:
             if child_node:
                 yield from self.tree_traversal(child_node)
 
-    def construct_suffix_tree(self):
-        """
-        Responsiblity: Main Method to build Ukkonen
-            Based Suffix Tree
-        Input: formatted_string = input_string + "$"
-        Ouput: Newly Contructed Suffix Tree Based on
-            Ukkonen Algorithm
-        """
-        self.initializing_the_value_and_add_root_node()
-        self.iterate_char_by_char()
-
+    def insert_char_in_suffix_tree(self, index):
+        while(self.remainder > 0):
+            self.set_act_edge_to_current_index(index)
 
 class UkkonenSuffixNode:
     def __init__(self, leaf_node):

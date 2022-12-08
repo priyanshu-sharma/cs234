@@ -2,6 +2,9 @@ import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
+from operator import attrgetter as at
+
+leaf_end_value = -1
 
 
 class UkkonenSuffixTree:
@@ -71,6 +74,34 @@ class UkkonenSuffixTree:
             Ukkonen Algorithm
         """
         pass
+
+
+class UkkonenSuffixNode:
+    def __init__(self, leaf_node):
+        self.children_node = {}
+        self.leaf_node = leaf_node
+        self.s_index = None
+        self.starting_value = None
+        self.ending_value = None
+        self.s_link = None
+
+    def __eq__(self, ukkonen_suffix_node):
+        atg = at("starting_value", "ending_value", "s_index")
+        if atg(self) == atg(ukkonen_suffix_node):
+            return True
+        return False
+
+    def __ne__(self, ukkonen_suffix_node):
+        atg = at("starting_value", "ending_value", "s_index")
+        if atg(self) != atg(ukkonen_suffix_node):
+            return True
+        return False
+
+    def __getattribute__(self, attribute_name):
+        if attribute_name == "ending_value":
+            if self.leaf_node:
+                return leaf_end_value
+        return super(UkkonenSuffixNode, self).__getattribute__(attribute_name)
 
 
 def construct_suffix_tree_using_ukkonen(formatted_string):

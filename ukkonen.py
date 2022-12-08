@@ -2,6 +2,15 @@ import time
 import logging
 logging.basicConfig(level=logging.INFO)
 
+class UkkonenSuffixTree:
+    def __init__(self, input_string):
+        self.input_string = input_string
+        self.size = -1
+        self.root_node = {}
+
+    def construct_suffix_tree(self):
+        pass
+
 def construct_suffix_tree_using_ukkonen(formatted_string):
     '''
     Responsiblity: Main Method to build Ukkonen
@@ -10,9 +19,9 @@ def construct_suffix_tree_using_ukkonen(formatted_string):
     Ouput: Newly Contructed Suffix Tree Based on
         Ukkonen Algorithm
     '''
-    # ukkonen_suffix_tree = UkkonenSuffixTree(formatted_string)
-    # ukkonen_suffix_tree.construct_suffix_tree()
-    return 1
+    ukkonen_suffix_tree = UkkonenSuffixTree(formatted_string)
+    ukkonen_suffix_tree.construct_suffix_tree()
+    return ukkonen_suffix_tree.root_node
 
 def user_input_flow():
     '''

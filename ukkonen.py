@@ -26,6 +26,13 @@ class UkkonenSuffixTree:
         self.remainder = 0
         self.root_end = None
         self.split_end = None
+    
+    def check_for_rule_three_extension(self, index):
+        if ((self.act_node == self.root_node) and (self.act_len > 0)):
+            self.act_len -= 1
+            self.act_edge = index - self.remainder + 1
+        elif (self.act_node != self.root_node):
+            self.act_node = self.act_node.s_link
 
     def initializing_the_value_and_add_root_node(self):
         self.size = len(self.formatted_string)
@@ -102,6 +109,7 @@ class UkkonenSuffixTree:
     def insert_char_in_suffix_tree(self, index):
         while(self.remainder > 0):
             self.set_act_edge_to_current_index(index)
+            self.check_for_rule_three_extension(index)
 
 class UkkonenSuffixNode:
     def __init__(self, leaf_node):

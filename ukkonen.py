@@ -27,6 +27,25 @@ class UkkonenSuffixTree:
         self.root_end = None
         self.split_end = None
 
+    def initializing_the_value_and_add_root_node(self):
+        self.size = len(self.formatted_string)
+        self.root_end = -1
+        new_root_node = UkkonenSuffixNode(False)
+        new_root_node.s_link = self.root_node
+        new_root_node.starting_value = -1
+        new_root_node.ending_value = self.root_end
+        new_root_node.s_index = -1
+        self.root_node = new_root_node
+        self.act_node = self.root_node
+
+    def iterate_char_by_char(self):
+        for index in range(self.size):
+            global leaf_end_value
+            leaf_end_value = index
+            self.remainder += 1
+            self.latest_node = None
+            # self.insert_char_in_suffix_tree(index)
+
     def traverse_tree(self):
         """
         Responsiblity: To output the newly
@@ -73,7 +92,8 @@ class UkkonenSuffixTree:
         Ouput: Newly Contructed Suffix Tree Based on
             Ukkonen Algorithm
         """
-        pass
+        self.initializing_the_value_and_add_root_node()
+        self.iterate_char_by_char()
 
 
 class UkkonenSuffixNode:

@@ -106,9 +106,63 @@ class UkkonenSuffixTree:
             if child_node:
                 yield from self.tree_traversal(child_node)
 
+    def check_for_latest_node_to_add_act_node(self):
+        if (self.latest_node is not None):
+            self.latest_node.s_link = self.act_node
+            self.latest_node = None
+
+    def check_for_latest_node_to_add_split_node(self, split_node):
+        if (self.latest_node is not None):
+            self.latest_node.s_link = split_node
+
+    def create_split_node(self, next_node, index):
+        new_split_node = UkkonenSuffixNode(False)
+        new_split_node.s_link = self.root_node
+        new_split_node.starting_value = next_node.starting_value
+        new_split_node.ending_value = self.split_end
+        new_split_node.s_index = -1
+        split_node = new_split_node
+        self.act_node.children_node[self.formatted_string[self.act_edge]] = split_node
+        split_child_node = UkkonenSuffixNode(True)
+        split_child_node.s_link = self.root_node
+        split_child_node.starting_value = index
+        split_child_node.ending_value = None
+        split_child_node.s_index = -1
+        split_node.children_node[self.formatted_string[index]] = split_child_node
+        next_node.starting_value += self.act_len
+        split_node.children_node[self.formatted_string[next_node.starting_value]] = next_node
+        return split_node
+
     def insert_char_in_suffix_tree(self, index):
         while(self.remainder > 0):
             self.set_act_edge_to_current_index(index)
+            if (self.act_node.children_node.get(self.formatted_string[self.act_edge]) is None):
+                new_node = UkkonenSuffixNode(True)
+                new_node.s_link = self.root_node
+                new_node.starting_value = index
+                new_node.ending_value = None
+                new_node.s_index = -1
+                self.act_node.children_node[self.formatted_string[self.act_edge]] = new_node
+                self.check_for_latest_node_to_add_act_node()
+            else:
+                next_node = self.act_node.children_node.get(self.formatted_string[self.act_edge])
+                length = next_node.ending_value - next_node.starting_value + 1
+                if (self.act_len >= length):
+                        self.act_edge += length
+                        self.act_len -= length
+                        self.act_node = next_node
+                        continue
+                if (self.formatted_string[next_node.starting_value + self.act_len] == self.formatted_string[index]):
+                    if((self.latest_node is not None) and (self.act_node != self.root_node)):
+                        self.latest_node.s_link = self.act_node
+                        self.latest_node = None
+                    self.act_len += 1
+                    break
+                self.split_end = next_node.starting_value + self.act_len - 1
+                split_node = self.create_split_node(next_node, index)
+                self.check_for_latest_node_to_add_split_node(split_node)
+                self.latest_node = split_node
+            self.remainder -= 1
             self.check_for_rule_three_extension(index)
 
 class UkkonenSuffixNode:

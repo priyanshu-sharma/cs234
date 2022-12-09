@@ -11,10 +11,10 @@ class UkkonenSuffixTree:
     def __init__(self, formatted_string):
         """
         Responsiblity: Main Method to build Ukkonen
-            Based Suffix Tree
-        Input: formatted_string = input_string + "$"
+            Based Suffix Tree.
+        Input: formatted_string = input_string + "$".
         Ouput: Newly Contructed Suffix Tree Based on
-            Ukkonen Algorithm
+            Ukkonen Algorithm.
         """
         self.formatted_string = formatted_string
         self.size = -1
@@ -28,6 +28,12 @@ class UkkonenSuffixTree:
         self.split_end = None
 
     def calculate_next_node_and_effective_length(self):
+        """
+        Responsiblity: Node Hopping, mainly calculate
+            next node and remaining length in the
+            string which is also known as effective
+            length.
+        """
         return self.act_node.children_node.get(self.formatted_string[self.act_edge]), (
             self.act_node.children_node.get(
                 self.formatted_string[self.act_edge]
@@ -39,6 +45,12 @@ class UkkonenSuffixTree:
         )
 
     def check_for_rule_two_extension(self, split_node=None):
+        """
+        Responsiblity: If not a first node to be
+            created after the split in one phase
+            create a suffix link between previously
+            inserted and new inserted node.
+        """
         if self.latest_node is not None:
             if split_node is None:
                 self.latest_node.s_link = self.act_node
@@ -48,6 +60,12 @@ class UkkonenSuffixTree:
                 self.latest_node = split_node
 
     def check_for_rule_three_extension(self, index):
+        """
+        Responsiblity: If split occur when active
+            node is not on a root node then follow
+            the suffix link to get the new active
+            node.
+        """
         if (self.act_node == self.root_node) and (self.act_len > 0):
             self.act_len -= 1
             self.act_edge = index - self.remainder + 1
@@ -55,6 +73,13 @@ class UkkonenSuffixTree:
             self.act_node = self.act_node.s_link
 
     def initializing_the_value_and_add_root_node(self):
+        """
+        Responsibility: Calculate total size of
+            formatted_string and initializing the
+            new root node to start the process
+            and setting active node to new
+            inserted root node.
+        """
         self.size = len(self.formatted_string)
         self.root_end = -1
         new_root_node = UkkonenSuffixNode(False)
@@ -66,6 +91,12 @@ class UkkonenSuffixTree:
         self.act_node = self.root_node
 
     def iterate_char_by_char(self):
+        """
+        Responsibility: Iterate char by char
+            and update remainder and latest
+            node and pass the index for
+            further processing.
+        """
         for index in range(self.size):
             global leaf_end_value
             leaf_end_value = index
@@ -78,8 +109,8 @@ class UkkonenSuffixTree:
         Responsiblity: To output the newly
             constructed suffix tree based on
             the values given by tree_traversal()
-            function
-        Input: UkkonenSuffixTree Class Funcation
+            function.
+        Input: UkkonenSuffixTree Class Function.
         Ouput: Print the children of the tree in
             Depth First Search Way. One can also
             replicate the same for Breadth First
@@ -89,16 +120,20 @@ class UkkonenSuffixTree:
             print(child)
 
     def set_act_edge_to_current_index(self, index):
+        """
+        Responsibility: Updating active edge to
+            current index for every new phase.
+        """
         if self.act_len == 0:
             self.act_edge = index
 
     def construct_suffix_tree(self):
         """
         Responsiblity: Main Method to build Ukkonen
-            Based Suffix Tree
-        Input: formatted_string = input_string + "$"
+            Based Suffix Tree.
+        Input: formatted_string = input_string + "$".
         Ouput: Newly Contructed Suffix Tree Based on
-            Ukkonen Algorithm
+            Ukkonen Algorithm.
         """
         self.initializing_the_value_and_add_root_node()
         self.iterate_char_by_char()
@@ -127,6 +162,14 @@ class UkkonenSuffixTree:
                 yield from self.tree_traversal(child_node)
 
     def create_split_node(self, next_node, index):
+        """
+        Responsibility: Create new split_node after
+            every split in every phase and also
+            initiate child node for the same split
+            node and update the starting_values.
+        Input: Next Node Pointer and Index.
+        Output: Newly Constructed Split Node.
+        """
         new_split_node = UkkonenSuffixNode(False)
         new_split_node.s_link = self.root_node
         new_split_node.starting_value = next_node.starting_value
@@ -147,6 +190,12 @@ class UkkonenSuffixTree:
         return split_node
 
     def insert_char_in_suffix_tree(self, index):
+        """
+        Responsibility: For Every Phase, orchestrator
+            the rule one, rule two and rule three
+            logic along with node hopping and Split
+            Node Logic.
+        """
         while self.remainder > 0:
             self.set_act_edge_to_current_index(index)
             if (
@@ -187,6 +236,13 @@ class UkkonenSuffixTree:
 
 
 class UkkonenSuffixNode:
+    """
+    Responsibility: Initialize every node
+        of UkkonenSuffixTree and also
+        initiate other important member
+        variable for the same node class.
+    """
+
     def __init__(self, leaf_node):
         self.children_node = {}
         self.leaf_node = leaf_node
@@ -217,10 +273,10 @@ class UkkonenSuffixNode:
 def construct_suffix_tree_using_ukkonen(formatted_string):
     """
     Responsiblity: Main Method to build Ukkonen
-        Based Suffix Tree
-    Input: formatted_string = input_string + "$"
+        Based Suffix Tree.
+    Input: formatted_string = input_string + "$".
     Ouput: Newly Contructed Suffix Tree Based on
-        Ukkonen Algorithm
+        Ukkonen Algorithm.
     """
     ukkonen_suffix_tree = UkkonenSuffixTree(formatted_string)
     ukkonen_suffix_tree.construct_suffix_tree()
@@ -236,9 +292,9 @@ def user_input_flow():
         Tree based on Ukkonen Algorithm.
         Post that Traversing the Newly
         Constructed Suffix Tree.
-    Input: User Entered Input String
+    Input: User Entered Input String.
     Output: Constructed Tree Based on
-        Ukkonen Algorithm
+        Ukkonen Algorithm.
     """
     input_string = input("Enter the input string : ")
     formatted_string = input_string + "$"

@@ -302,7 +302,6 @@ def user_input_flow():
     logging.info("----------Started Constructing Suffix Tree-------------")
     start_time = time.time()
     ukkonen_suffix_tree = construct_suffix_tree_using_ukkonen(formatted_string)
-    print(ukkonen_suffix_tree)
     end_time = time.time()
     logging.info("----------Suffix Tree Construction Completed-------------")
     logging.info(

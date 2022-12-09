@@ -2,6 +2,9 @@ import time
 import logging
 
 logging.basicConfig(level=logging.INFO)
+from operator import attrgetter as at
+
+leaf_end_value = -1
 
 
 class UkkonenSuffixTree:
@@ -23,6 +26,25 @@ class UkkonenSuffixTree:
         self.remainder = 0
         self.root_end = None
         self.split_end = None
+
+    def initializing_the_value_and_add_root_node(self):
+        self.size = len(self.formatted_string)
+        self.root_end = -1
+        new_root_node = UkkonenSuffixNode(False)
+        new_root_node.s_link = self.root_node
+        new_root_node.starting_value = -1
+        new_root_node.ending_value = self.root_end
+        new_root_node.s_index = -1
+        self.root_node = new_root_node
+        self.act_node = self.root_node
+
+    def iterate_char_by_char(self):
+        for index in range(self.size):
+            global leaf_end_value
+            leaf_end_value = index
+            self.remainder += 1
+            self.latest_node = None
+            # self.insert_char_in_suffix_tree(index)
 
     def traverse_tree(self):
         """
@@ -70,7 +92,36 @@ class UkkonenSuffixTree:
         Ouput: Newly Contructed Suffix Tree Based on
             Ukkonen Algorithm
         """
-        pass
+        self.initializing_the_value_and_add_root_node()
+        self.iterate_char_by_char()
+
+
+class UkkonenSuffixNode:
+    def __init__(self, leaf_node):
+        self.children_node = {}
+        self.leaf_node = leaf_node
+        self.s_index = None
+        self.starting_value = None
+        self.ending_value = None
+        self.s_link = None
+
+    def __eq__(self, ukkonen_suffix_node):
+        atg = at("starting_value", "ending_value", "s_index")
+        if atg(self) == atg(ukkonen_suffix_node):
+            return True
+        return False
+
+    def __ne__(self, ukkonen_suffix_node):
+        atg = at("starting_value", "ending_value", "s_index")
+        if atg(self) != atg(ukkonen_suffix_node):
+            return True
+        return False
+
+    def __getattribute__(self, attribute_name):
+        if attribute_name == "ending_value":
+            if self.leaf_node:
+                return leaf_end_value
+        return super(UkkonenSuffixNode, self).__getattribute__(attribute_name)
 
 
 def construct_suffix_tree_using_ukkonen(formatted_string):
